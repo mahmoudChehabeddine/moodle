@@ -50,10 +50,7 @@ RUN chmod -R 0777 /var/www/html/moodle
  
 # Fix deprecated string syntax
 RUN find /var/www/html/moodle -type f -name '*.php' -exec sed -i 's/\${\([^}]*\)}/{$\1}/g' {} +
- 
-# Enable PHP error reporting and display errors for debugging
-RUN echo "display_errors = On" >> /etc/php/7.4/apache2/php.ini
-RUN echo "error_reporting = E_ALL" >> /etc/php/7.4/apache2/php.ini
+
  
 # Restart Apache
 RUN service apache2 restart

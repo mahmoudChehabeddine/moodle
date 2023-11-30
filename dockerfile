@@ -19,7 +19,6 @@ RUN apt-get install -y \
     php7.4 \
     php7.4-pgsql \
     libapache2-mod-php \
-    libapache2-mod-php7.4 \
     graphviz \
     aspell \
     ghostscript \
@@ -45,9 +44,6 @@ COPY . /var/www/html/moodle
  
 # Create moodledata directory
 RUN mkdir /var/moodledata && chown -R www-data /var/moodledata && chmod -R 777 /var/moodledata
- 
-# Set permissions for Moodle directory
-RUN chmod -R 0755 /var/www/html/moodle
  
 # Fix deprecated string syntax
 RUN find /var/www/html/moodle -type f -name '*.php' -exec sed -i 's/\${\([^}]*\)}/{$\1}/g' {} +

@@ -46,7 +46,7 @@ COPY . /var/www/html/moodle
 RUN mkdir /var/moodledata && chown -R www-data /var/moodledata && chmod -R 777 /var/moodledata
  
 # Set permissions for Moodle directory
-RUN chmod -R 0777 /var/www/html/moodle
+RUN chmod -R 777 /var/www/html/moodle
  
 # Fix deprecated string syntax
 RUN find /var/www/html/moodle -type f -name '*.php' -exec sed -i 's/\${\([^}]*\)}/{$\1}/g' {} +

@@ -51,7 +51,8 @@ RUN chmod -R 0755 /var/www/html/moodle
 # Fix deprecated string syntax
 RUN find /var/www/html/moodle -type f -name '*.php' -exec sed -i 's/\${\([^}]*\)}/{$\1}/g' {} +
 
- 
+ RUN chmod -R 777 /var/www/html/moodle
+
 # Restart Apache
 RUN service apache2 restart
  

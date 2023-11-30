@@ -24,3 +24,14 @@ jobs:
 
     - name: Push Docker image
       run: docker push zonemc/moodle2:latest
+
+    - name: SSH into AWS Ubuntu machine
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AWS_HOST }}
+        username: ${{ secrets.AWS_USERNAME }}
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+
+    - name: Pull and Run Docker image on AWS
+      run: |
+        ssh -i ${{ secrets.AWS_SSH_PRIVATE_KEY }} ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }} 'docker pull zonemc/moodle2:latest && docker run -d -p 80:80 zonemc/moodle2:latest'

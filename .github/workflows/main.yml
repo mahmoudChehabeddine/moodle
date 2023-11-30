@@ -3,7 +3,7 @@ name: Build and Deploy Docker Image
 on:
   push:
     branches:
-      - main
+      - MOODLE_400_STABLE
 
 jobs:
   build-and-deploy:

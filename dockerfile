@@ -1,55 +1,48 @@
-# Use the official Ubuntu 20.04 image
+Use the official Ubuntu 20.04 image
 FROM ubuntu:20.04
  
-# Install necessary packages
-RUN apt-get update 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y apache2
-RUN apt-get install -y git 
+# Update the package lists
+RUN apt update
+ 
+# Remove existing PHP installations
+RUN apt-get purge $(dpkg -l | grep php| awk '{print $2}' | tr "\n" " ")
+ 
+# Add PHP repository and update package lists
 RUN apt-get install -y software-properties-common
-RUN apt-get install -y postgresql
-RUN apt-get install -y postgresql-contrib
-RUN rm -rf /var/lib/apt/lists/*
+RUN add-apt-repository ppa:ondrej/php
+RUN apt update 
+RUN apt-get install -y php8.0 
+RUN apt-get install -y php8.0-pgsql 
+RUN apt-get install -y libapache2-mod-php8.0 
+RUN apt-get install -y php8.0-curl 
+RUN apt-get install -y php8.0-gd 
+RUN apt-get install -y php8.0-intl 
+RUN apt-get install -y php8.0-mysql 
+RUN apt-get install -y php8.0-xml 
+RUN apt-get install -y php8.0-xmlrpc 
+RUN apt-get install -y php8.0-ldap 
+RUN apt-get install -y php8.0-zip 
+RUN apt-get install -y php8.0-soap 
+RUN apt-get install -y php8.0-mbstring
  
-# Add PHP repository
-RUN add-apt-repository ppa:ondrej/php && apt-get update
- 
-# Install PHP 7.4 and required extensions
-RUN apt-get install -y php7.4
-RUN apt-get install -y php7.4-pgsql 
-RUN apt-get install -y libapache2-mod-php7.4
-RUN apt-get install -y graphviz
-RUN apt-get install -y aspell
-RUN apt-get install -y ghostscript
-RUN apt-get install -y clamav
-RUN apt-get install -y php7.4-pspell
-RUN apt-get install -y php7.4-curl
-RUN apt-get install -y php7.4-gd
-RUN apt-get install -y php7.4-intl 
-RUN apt-get install -y php7.4-mysql
-RUN apt-get install -y php7.4-xml
-RUN apt-get install -y php7.4-xmlrpc
-RUN apt-get install -y php7.4-ldap
-RUN apt-get install -y php7.4-zip
-RUN apt-get install -y php7.4-soap
-RUN apt-get install -y php7.4-mbstring 
-RUN rm -rf /var/lib/apt/lists/*
- 
-# Enable Apache modules
-RUN a2enmod rewrite
- 
-# Copy everything to /var/www/html/moodle
-COPY . /var/www/html/moodle
- 
-# Create moodledata directory
-RUN mkdir /var/moodledata && chown -R www-data /var/moodledata && chmod -R 777 /var/moodledata
- 
-# Fix deprecated string syntax
-RUN find /var/www/html/moodle -type f -name '*.php' -exec sed -i 's/\${\([^}]*\)}/{$\1}/g' {} +
-
- RUN chmod -R 777 /var/www/html/moodle
-
 # Restart Apache
 RUN service apache2 restart
+ 
+COPY . /var/www/html/moodle
+
+ 
+# Create Moodle data directory and set permissions
+RUN mkdir /var/moodledata
+RUN chown -R www-data /var/moodledata
+RUN chmod -R 777 /var/moodledata
+RUN chmod -R 777 /var/www/html/moodle
+ 
+ 
+# Update PHP configuration
+RUN echo "max_input_vars = 5000" >> /etc/php/8.0/apache2/php.ini
+ 
+RUN service apache2 restart
+ 
  
 # Expose ports
 EXPOSE 80

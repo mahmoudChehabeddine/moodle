@@ -1,4 +1,4 @@
-Use the official Ubuntu 20.04 image
+Use the official Ubuntu 20.04 images
 FROM ubuntu:20.04
  
 # Update the package lists

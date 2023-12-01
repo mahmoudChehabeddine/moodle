@@ -2,39 +2,37 @@
 FROM ubuntu:20.04
  
 # Install necessary packages
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    apache2 \
-    git \
-    software-properties-common \
-    postgresql \
-    postgresql-contrib \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y apache2
+RUN apt-get install -y git 
+RUN apt-get install -y software-properties-common
+RUN apt-get install -y postgresql
+RUN apt-get install -y postgresql-contrib
+RUN rm -rf /var/lib/apt/lists/*
  
 # Add PHP repository
 RUN add-apt-repository ppa:ondrej/php && apt-get update
  
 # Install PHP 7.4 and required extensions
-RUN apt-get install -y \
-    php7.4 \
-    php7.4-pgsql \
-    libapache2-mod-php7.4 \
-    graphviz \
-    aspell \
-    ghostscript \
-    clamav \
-    php7.4-pspell \
-    php7.4-curl \
-    php7.4-gd \
-    php7.4-intl \
-    php7.4-mysql \
-    php7.4-xml \
-    php7.4-xmlrpc \
-    php7.4-ldap \
-    php7.4-zip \
-    php7.4-soap \
-    php7.4-mbstring \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y php7.4
+RUN apt-get install -y php7.4-pgsql 
+RUN apt-get install -y libapache2-mod-php7.4
+RUN apt-get install -y graphviz
+RUN apt-get install -y aspell
+RUN apt-get install -y ghostscript
+RUN apt-get install -y clamav
+RUN apt-get install -y php7.4-pspell
+RUN apt-get install -y php7.4-curl
+RUN apt-get install -y php7.4-gd
+RUN apt-get install -y php7.4-intl 
+RUN apt-get install -y php7.4-mysql
+RUN apt-get install -y php7.4-xml
+RUN apt-get install -y php7.4-xmlrpc
+RUN apt-get install -y php7.4-ldap
+RUN apt-get install -y php7.4-zip
+RUN apt-get install -y php7.4-soap
+RUN apt-get install -y php7.4-mbstring 
+RUN rm -rf /var/lib/apt/lists/*
  
 # Enable Apache modules
 RUN a2enmod rewrite

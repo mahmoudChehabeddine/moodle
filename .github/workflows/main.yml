@@ -50,6 +50,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
-        script: sudo docker exec -it postgres psql -U postgres -c "CREATE USER moodleuser WITH PASSWORD '123';" && sudo docker exec -it postgres psql -U postgres -c "CREATE DATABASE moodle OWNER moodleuser;"
+        script: sudo docker exec postgres psql -U postgres -c "CREATE USER moodleuser WITH PASSWORD '123';" && sudo docker exec postgres psql -U postgres -c "CREATE DATABASE moodle OWNER moodleuser;"
 
             

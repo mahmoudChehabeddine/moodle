@@ -32,21 +32,22 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
-        script: |
-          # Stop and remove existing Docker containers
-          existing_containers=$(sudo docker ps -q)
-          if [ ! -z "$existing_containers" ]; then
-            sudo docker stop $existing_containers
-            sudo docker rm $existing_containers
-          fi
+        script: sudo docker pull zonemc/moodle2:latest && sudo docker run -d -p 82:80 --name moodle zonemc/moodle2:latest
 
-          # Pull and run the new Moodle Docker container
-          sudo docker pull zonemc/moodle2:latest
-          sudo docker run -d -p 80:80 --name moodle zonemc/moodle2:latest
-
-          # Run PostgreSQL Docker container
-          sudo docker run -d --name postgres -e POSTGRES_PASSWORD=123 -p 5432:5432 postgres:13
-
-          # Create PostgreSQL user and database
-          sudo docker exec postgres psql -U postgres -c "CREATE USER moodleuser WITH PASSWORD '123';"
-          sudo docker exec postgres psql -U postgres -c "CREATE DATABASE moodle OWNER moodleuser;"
+    - name: executing remote ssh commands
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: sudo docker run -d --name postgres -e POSTGRES_PASSWORD=123 -p 5432:5432 postgres:13
+   
+    - name: executing remote ssh commands
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: sudo docker exec postgres psql -U postgres -c "CREATE USER moodleuser WITH PASSWORD '123';" && sudo docker exec postgres psql -U postgres -c "CREATE DATABASE moodle OWNER moodleuser;"

@@ -14,23 +14,29 @@ RUN apt update
  
 # Install PHP 8.0, PostgreSQL 13, and Apache with required modules
  
-RUN apt-get install -y php
-RUN apt-get install -y php-pgsql 
-RUN apt-get install -y libapache2-mod-php
-RUN apt-get install -y php-curl 
-RUN apt-get install -y php-gd 
-RUN apt-get install -y php-intl 
-RUN apt-get install -y php-mysql 
-RUN apt-get install -y php-xml 
-RUN apt-get install -y php-xmlrpc 
-RUN apt-get install -y php-ldap 
-RUN apt-get install -y php-zip 
-RUN apt-get install -y php-soap 
-RUN apt-get install -y php-mbstring
+RUN apt-get install -y php8.0 
+RUN apt-get install -y php8.0-pgsql 
+RUN apt-get install -y libapache2-mod-php8.0 
+# RUN apt-get install -y postgresql-13 
+RUN apt-get install -y php8.0-curl 
+RUN apt-get install -y php8.0-gd 
+RUN apt-get install -y php8.0-intl 
+RUN apt-get install -y php8.0-mysql 
+RUN apt-get install -y php8.0-xml 
+RUN apt-get install -y php8.0-xmlrpc 
+RUN apt-get install -y php8.0-ldap 
+RUN apt-get install -y php8.0-zip 
+RUN apt-get install -y php8.0-soap 
+RUN apt-get install -y php8.0-mbstring
  
 # Restart Apache
 RUN service apache2 restart
-
+ 
+# Clone Moodle repository
+#RUN apt-get install -y git
+#RUN cd /opt && git clone git://git.moodle.org/moodle.git
+#RUN cd /opt/moodle && git branch -a && git branch --track MOODLE_403_STABLE origin/MOODLE_403_STABLE && git checkout MOODLE_403_STABLE
+ 
 COPY . /var/www/html/moodle
  
 # Copy Moodle files to Apache directory
@@ -42,9 +48,27 @@ RUN chown -R www-data /var/moodledata
 RUN chmod -R 777 /var/moodledata
 RUN chmod -R 777 /var/www/html/moodle
  
-
+# Install PostgreSQL and its contrib package
+#RUN apt-get install -y postgresql postgresql-contrib
+ 
+# Initialize PostgreSQL database and configure user and database
+#RUN sudo -u postgres psql -c "CREATE USER moodleuser WITH PASSWORD '123';"
+#RUN sudo -u postgres psql -c "CREATE DATABASE moodle WITH OWNER moodleuser;"
+ 
+# Configure PostgreSQL to allow connections
+#RUN echo "host       moodle     moodleuser     0.0.0.0/32       md5" >> /etc/postgresql/13/main/pg_hba.conf
+#RUN echo "host       moodle     moodleuser     35.156.155.240/32       md5" >> /etc/postgresql/13/main/pg_hba.conf
+ 
+# Configure PostgreSQL to listen on all addresses
+#RUN echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf
+ 
+# Restart Apache and PostgreSQL services
+ 
+ 
+# RUN systemctl restart postgresql
+ 
 # Update PHP configuration
-RUN echo "max_input_vars = 5000" >> /etc/php/8.1/apache2/php.ini
+RUN echo "max_input_vars = 5000" >> /etc/php/8.0/apache2/php.ini
  
 RUN service apache2 restart
  

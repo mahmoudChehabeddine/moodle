@@ -33,3 +33,23 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: sudo docker pull zonemc/moodle2:latest && sudo docker run -d -p 82:80 --name moodle zonemc/moodle2:latest
+
+    - name: executing remote ssh commands
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: sudo docker run -d --name postgres -e POSTGRES_PASSWORD=123 -p 5432:5432 postgres:13
+   
+    - name: executing remote ssh commands
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: sudo docker exec -it postgres psql -U postgres -c "CREATE USER moodleuser WITH PASSWORD '123';" && sudo docker exec -it postgres psql -U postgres -c "CREATE DATABASE moodle OWNER moodleuser;"
+
+            

@@ -39,8 +39,6 @@ RUN service apache2 restart
  
 COPY . /var/www/html/moodle
  
-# Copy Moodle files to Apache directory
-#RUN cp -R /opt/moodle /var/www/html/
  
 # Create Moodle data directory and set permissions
 RUN mkdir /var/moodledata
@@ -48,24 +46,6 @@ RUN chown -R www-data /var/moodledata
 RUN chmod -R 777 /var/moodledata
 RUN chmod -R 777 /var/www/html/moodle
  
-# Install PostgreSQL and its contrib package
-#RUN apt-get install -y postgresql postgresql-contrib
- 
-# Initialize PostgreSQL database and configure user and database
-#RUN sudo -u postgres psql -c "CREATE USER moodleuser WITH PASSWORD '123';"
-#RUN sudo -u postgres psql -c "CREATE DATABASE moodle WITH OWNER moodleuser;"
- 
-# Configure PostgreSQL to allow connections
-#RUN echo "host       moodle     moodleuser     0.0.0.0/32       md5" >> /etc/postgresql/13/main/pg_hba.conf
-#RUN echo "host       moodle     moodleuser     35.156.155.240/32       md5" >> /etc/postgresql/13/main/pg_hba.conf
- 
-# Configure PostgreSQL to listen on all addresses
-#RUN echo "listen_addresses = '*'" >> /etc/postgresql/13/main/postgresql.conf
- 
-# Restart Apache and PostgreSQL services
- 
- 
-# RUN systemctl restart postgresql
  
 # Update PHP configuration
 RUN echo "max_input_vars = 5000" >> /etc/php/8.0/apache2/php.ini
